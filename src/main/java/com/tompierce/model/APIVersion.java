@@ -1,9 +1,9 @@
 package com.tompierce.model;
 
 public class APIVersion {
-	private String version;
+	private final String version;
 
-	public APIVersion(String version) {
+	public APIVersion(final String version) {
 		this.version = version;
 	}
 

@@ -16,7 +16,6 @@ public class ExpiringConcurrentHashMap<K,V> implements Map<K,V>  {
 	private Map<K,ValueExpiredWrapper<V>> map;
 	
 	public ExpiringConcurrentHashMap() {
-		super();
 		map = new ConcurrentHashMap<K, ValueExpiredWrapper<V>>();
 		scheduler = Executors.newScheduledThreadPool(1);
 	}
@@ -36,6 +35,27 @@ public class ExpiringConcurrentHashMap<K,V> implements Map<K,V>  {
 	}
 
 	@Override
+	public V get(Object key) {
+		ValueExpiredWrapper<V> wrappedValue = map.get(key);
+		if (wrappedValue != null) {
+			if (wrappedValue.isExpired()) {
+				throw new ExpiredValueException();			
+			}
+			return wrappedValue.getValue();
+		}
+		return null;
+	}
+	
+	@Override
+	public V remove(Object key) {
+		ValueExpiredWrapper<V> wrappedValue = map.remove(key);
+		if (wrappedValue.isExpired()) {
+			throw new UnsupportedOperationException("cannot remove expired value");
+		}
+		return wrappedValue.getValue();
+	}
+
+	@Override
 	public int size() {
 		return map.size();
 	}
@@ -51,35 +71,21 @@ public class ExpiringConcurrentHashMap<K,V> implements Map<K,V>  {
 	}
 
 	@Override
+	public Set<K> keySet() {
+		return map.keySet();
+	}
+
+	@Override
 	public boolean containsValue(Object value) {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public V get(Object key) {
-		ValueExpiredWrapper<V> wrappedValue = map.get(key);
-		if (wrappedValue != null) {
-			if (wrappedValue.isExpired()) {
-				throw new ExpiredValueException();			
-			}
-			return wrappedValue.getValue();
-		}
-		return null;
-	}
 
 	@Override
 	public V put(K key, V value) {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public V remove(Object key) {
-		ValueExpiredWrapper<V> wrappedValue = map.remove(key);
-		if (wrappedValue.isExpired()) {
-			throw new UnsupportedOperationException("cannot remove expired value");
-		}
-		return wrappedValue.getValue();
-	}
 
 	@Override
 	public void putAll(Map<? extends K, ? extends V> m) {
@@ -91,10 +97,6 @@ public class ExpiringConcurrentHashMap<K,V> implements Map<K,V>  {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public Set<K> keySet() {
-		return map.keySet();
-	}
 
 	@Override
 	public Collection<V> values() {

@@ -2,8 +2,8 @@ package com.tompierce.model;
 
 public class MessageResponse {
 
-	private String message;
-	private boolean expired;
+	private final String message;
+	private final boolean expired;
 
 	public MessageResponse(final String message, final boolean expired) {
 		this.message = message;

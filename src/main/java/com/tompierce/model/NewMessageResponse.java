@@ -1,9 +1,9 @@
 package com.tompierce.model;
 
 public class NewMessageResponse {
-	private String messageId;
+	private final String messageId;
 
-	public NewMessageResponse(String messageId) {
+	public NewMessageResponse(final String messageId) {
 		this.messageId = messageId;
 	}
 
