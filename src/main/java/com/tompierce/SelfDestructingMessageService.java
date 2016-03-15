@@ -77,7 +77,7 @@ public class SelfDestructingMessageService {
     }
     
     private static boolean shouldReturnJson(Request req) {
-		String jsonParam = req.queryParams("json");
+    	String jsonParam = req.queryParams("json");
 
 		if (jsonParam != null) {
 			if (!jsonParam.equals("false")) {

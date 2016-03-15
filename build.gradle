@@ -1,12 +1,16 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'application'
 
+mainClassName = 'com.tompierce.SelfDestructingMessageService'
 sourceCompatibility = 1.8
 version = '1.0'
+
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Gradle Quickstart',
-                   'Implementation-Version': version
+        attributes 'Implementation-Title': 'Self Destructing Message Service',
+                   'Implementation-Version': version,
+                   'Main-Class': mainClassName
     }
 }
 
@@ -16,7 +20,6 @@ repositories {
 
 dependencies {
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
-    compile group: 'commons-io', name: 'commons-io', version: '3.2'
     compile 'com.sparkjava:spark-core:2.2'
     compile 'com.google.code.gson:gson:1.7.2'
     testCompile group: 'junit', name: 'junit', version: '4.+'
