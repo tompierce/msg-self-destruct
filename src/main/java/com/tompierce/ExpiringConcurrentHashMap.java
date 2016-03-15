@@ -14,8 +14,11 @@ public class ExpiringConcurrentHashMap<K,V> implements Map<K,V>  {
 	private ScheduledExecutorService scheduler;
 	
 	private Map<K,ValueExpiredWrapper<V>> map;
+
+	private final V expiredValue;
 	
-	public ExpiringConcurrentHashMap() {
+	public ExpiringConcurrentHashMap(final V expiredValue) {
+		this.expiredValue = expiredValue;
 		map = new ConcurrentHashMap<K, ValueExpiredWrapper<V>>();
 		scheduler = Executors.newScheduledThreadPool(1);
 	}
@@ -39,7 +42,7 @@ public class ExpiringConcurrentHashMap<K,V> implements Map<K,V>  {
 		ValueExpiredWrapper<V> wrappedValue = map.get(key);
 		if (wrappedValue != null) {
 			if (wrappedValue.isExpired()) {
-				throw new ExpiredValueException();			
+				return expiredValue;
 			}
 			return wrappedValue.getValue();
 		}

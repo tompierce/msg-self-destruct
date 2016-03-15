@@ -1,13 +1,10 @@
 package com.tompierce.model;
 
-public class BadRequestResponse {
-	private final String error;
+public class BadRequestResponse extends AbstractErrorResponse {
 
 	public BadRequestResponse() {
-		error = "Bad Request";
+		super();
+		setError("Bad Request");
 	}
 	
-	public String getError() {
-		return error;
-	}
 }
