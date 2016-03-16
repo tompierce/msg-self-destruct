@@ -6,5 +6,5 @@ public class BadRequestResponse extends AbstractErrorResponse {
 		super();
 		setError("Bad Request");
 	}
-	
+
 }

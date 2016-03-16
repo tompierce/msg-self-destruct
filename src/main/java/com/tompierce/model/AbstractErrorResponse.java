@@ -6,7 +6,7 @@ public abstract class AbstractErrorResponse {
 	public AbstractErrorResponse() {
 		error = "Error";
 	}
-	
+
 	public String getError() {
 		return error;
 	}

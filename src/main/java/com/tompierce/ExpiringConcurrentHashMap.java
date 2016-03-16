@@ -9,24 +9,24 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class ExpiringConcurrentHashMap<K,V> implements Map<K,V>  {
+public class ExpiringConcurrentHashMap<K, V> implements Map<K, V> {
 
 	private ScheduledExecutorService scheduler;
-	
-	private Map<K,ValueExpiredWrapper<V>> map;
+
+	private Map<K, ValueExpiredWrapper<V>> map;
 
 	private final V expiredValue;
-	
+
 	public ExpiringConcurrentHashMap(final V expiredValue) {
 		this.expiredValue = expiredValue;
 		map = new ConcurrentHashMap<K, ValueExpiredWrapper<V>>();
 		scheduler = Executors.newScheduledThreadPool(1);
 	}
-	
+
 	public void put(K key, V value, Duration expiresIn) {
-		
+
 		map.put(key, new ValueExpiredWrapper<V>(value));
-				
+
 		scheduler.schedule(() -> {
 			ValueExpiredWrapper<V> wrappedValue = map.get(key);
 			if (wrappedValue != null) {
@@ -48,7 +48,7 @@ public class ExpiringConcurrentHashMap<K,V> implements Map<K,V>  {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public V remove(Object key) {
 		ValueExpiredWrapper<V> wrappedValue = map.remove(key);
@@ -83,12 +83,10 @@ public class ExpiringConcurrentHashMap<K,V> implements Map<K,V>  {
 		throw new UnsupportedOperationException();
 	}
 
-
 	@Override
 	public V put(K key, V value) {
 		throw new UnsupportedOperationException();
 	}
-
 
 	@Override
 	public void putAll(Map<? extends K, ? extends V> m) {
@@ -100,7 +98,6 @@ public class ExpiringConcurrentHashMap<K,V> implements Map<K,V>  {
 		throw new UnsupportedOperationException();
 	}
 
-
 	@Override
 	public Collection<V> values() {
 		throw new UnsupportedOperationException();
@@ -109,6 +106,6 @@ public class ExpiringConcurrentHashMap<K,V> implements Map<K,V>  {
 	@Override
 	public Set<java.util.Map.Entry<K, V>> entrySet() {
 		throw new UnsupportedOperationException();
-	}	
+	}
 
 }

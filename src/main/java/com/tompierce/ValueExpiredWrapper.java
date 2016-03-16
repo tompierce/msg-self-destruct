@@ -1,10 +1,10 @@
 package com.tompierce;
 
 public final class ValueExpiredWrapper<V> {
-	
+
 	private V value;
 	private boolean expired;
-	
+
 	public ValueExpiredWrapper(final V value) {
 		this.value = value;
 		this.expired = false;
