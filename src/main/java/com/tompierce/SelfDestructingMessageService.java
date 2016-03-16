@@ -25,13 +25,7 @@ public class SelfDestructingMessageService {
 	private static MessageIDGenerator idGenerator = new MessageIDGenerator();
 
 	public static void main(String[] args) {
-
-		String port = System.getProperty("port");
-		if (port == null) {
-			port = "8080";
-		}
-
-		port(Integer.parseInt(port));
+		port(Integer.parseInt(System.getProperty("server.port", "8080")));
 
 		get("/", (req, res) -> {
 			res.type("text/html");

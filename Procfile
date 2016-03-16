@@ -1,0 +1,1 @@
+web: JAVA_OPTS=-Dserver.port=$PORT ./build/install/msg-self-destruct/bin/msg-self-destruct
