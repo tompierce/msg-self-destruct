@@ -7,6 +7,8 @@ import static spark.Spark.port;
 import java.time.Duration;
 
 import com.google.gson.Gson;
+import com.tompierce.data.SelfDestructingMessageStore;
+import com.tompierce.data.memory.InMemorySelfDestructingMessageStore;
 import com.tompierce.model.APIVersion;
 import com.tompierce.model.BadRequestResponse;
 import com.tompierce.model.MessageResponse;
@@ -20,9 +22,8 @@ public class SelfDestructingMessageService {
 	private static final String API_VERSION = "0.0.1";
 	private static final String EXPIRED_MESSAGE = "Expired.";
 	private static Gson gson = new Gson();
-	private static ExpiringConcurrentHashMap<String, String> messageMap = new ExpiringConcurrentHashMap<String, String>(
-			EXPIRED_MESSAGE);
-	private static MessageIDGenerator idGenerator = new MessageIDGenerator();
+	private static SelfDestructingMessageStore<String, String> store = 
+			new InMemorySelfDestructingMessageStore<String>(EXPIRED_MESSAGE);
 
 	public static void main(String[] args) {
 		port(Integer.parseInt(System.getProperty("server.port", "8080")));
@@ -46,16 +47,14 @@ public class SelfDestructingMessageService {
 				return new BadRequestResponse();
 			}
 
-			String newMessageId = getUniqueMessageId();
+			String id = store.put(messageParam, Duration.ofSeconds(Integer.parseInt(expiresParam)));
 
-			messageMap.put(newMessageId, messageParam, Duration.ofSeconds(Integer.parseInt(expiresParam)));
-
-			return new NewMessageResponse(newMessageId);
+			return new NewMessageResponse(id);
 		}, gson::toJson);
 
 		get("/message/:messageId", (req, res) -> {
-			String messageId = req.params(":messageId");
-			String message = messageMap.get(messageId);
+			final String messageId = req.params(":messageId");
+			final String message = store.get(messageId);
 
 			if (message == null) {
 				res.status(404);
@@ -88,12 +87,4 @@ public class SelfDestructingMessageService {
 		return false;
 	}
 
-	private static String getUniqueMessageId() {
-		String newMessageId = idGenerator.nextID();
-		while (messageMap.containsKey(newMessageId)) {
-			newMessageId = idGenerator.nextID();
-		}
-		return newMessageId;
-
-	}
 }

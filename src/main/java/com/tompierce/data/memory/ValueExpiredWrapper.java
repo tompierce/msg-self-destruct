@@ -1,4 +1,4 @@
-package com.tompierce;
+package com.tompierce.data.memory;
 
 public final class ValueExpiredWrapper<V> {
 

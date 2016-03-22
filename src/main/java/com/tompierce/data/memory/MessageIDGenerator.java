@@ -1,4 +1,4 @@
-package com.tompierce;
+package com.tompierce.data.memory;
 
 import java.security.SecureRandom;
 import java.math.BigInteger;

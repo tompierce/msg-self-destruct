@@ -1,4 +1,4 @@
-package com.tompierce;
+package com.tompierce.data.memory;
 
 import java.time.Duration;
 import java.util.Collection;
